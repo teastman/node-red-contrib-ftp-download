@@ -1,0 +1,14 @@
+{
+  "server": {
+    "host": "Host",
+    "port": "Port",
+    "connection_timeout": "Connection Timeout",
+    "pasv_timeout": "PASV Timeout",
+    "keepalive": "Keepalive"
+  },
+  "download": {
+    "server": "Server",
+    "files": "File(s)",
+    "destination": "Destination"
+  }
+}
