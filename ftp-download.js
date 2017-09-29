@@ -73,16 +73,19 @@ module.exports = function (RED) {
                         fileList = global.get(node.files);
                         break;
                     case 'json':
-                        fileList = node.files;
+                        fileList = JSON.parse(node.files);
                         break;
                     default:
                         fileList = [node.files];
                 }
-                if (!(fileList instanceof Array))
-                    node.error("Files field must be an array.");
+                if (!Array.isArray(fileList)) {
+                    node.error("Files field must be an array.", msg);
+                    return;
+                }
             }
             catch (err) {
                 node.error("Could not load files variable, type: " + node.filesType + " location: " + node.files, msg);
+                return;
             }
 
             // Load the destination from the appropriate variable.
@@ -103,6 +106,7 @@ module.exports = function (RED) {
             }
             catch (err) {
                 node.error("Could not load destination variable, type: " + node.destinationType + " location: " + node.destination, msg);
+                return;
             }
 
             // Assert we have access to write to the destination
@@ -111,6 +115,7 @@ module.exports = function (RED) {
             }
             catch (err) {
                 node.error("Lacking permission to write files to " + destination, msg);
+                return;
             }
 
             conn.on('ready', () => {
@@ -123,31 +128,52 @@ module.exports = function (RED) {
 
                 promise
                     .then((filePaths)=> {
-                        conn.end();
                         msg.payload = filePaths;
                         node.send(msg);
                     })
                     .catch((err) => {
-                        conn.end();
-                        msg.payload = err;
+                        msg.payload = {
+                            fileList: fileList,
+                            destination: destination,
+                            error: err
+                        };
                         node.error("FTP download failed", msg);
                     })
             });
 
             function download(file) {
                 return (filePaths) => new Promise((resolve, reject) => {
-                    conn.get(file, (err, stream) => {
-                        if (err)
-                            throw err;
-                        let filePath = path.join(destination, path.basename(file));
-                        filePaths.push(filePath);
-                        stream.once('finish', () => resolve(filePaths));
-                        stream.pipe(fs.createWriteStream(filePath));
-                    });
+                    try {
+                        conn.get(file, (err, stream) => {
+                            try {
+                                if (err)
+                                    throw err;
+                                let filePath = path.join(destination, path.basename(file));
+                                filePaths.push(filePath);
+                                stream.once('finish', () => resolve(filePaths));
+                                stream.pipe(fs.createWriteStream(filePath));
+                            }
+                            catch (error) {
+                                reject(error);
+                            }
+                        });
+                    }
+                    catch (error) {
+                        reject(error);
+                    }
                 });
             }
 
             conn.connect(node.serverConfig.options);
+        });
+
+        node.on('close', () => {
+            try {
+                conn.destroy();
+            }
+            catch (err) {
+                // Do nothing as the node is closed anyway.
+            }
         });
     }
 

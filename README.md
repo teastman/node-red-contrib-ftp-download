@@ -14,16 +14,16 @@ Usage
 This node allows you to download one or more files within a single connection.
 
 The file paths may be defined in one of a number of ways.
-- `msg.`: A path to a variable on the msg object that contains an array of Strings.
-- `flow.`: A path to a variable on the flow context object that contains an array of Strings.
-- `global.`: A path to a variable on the global context object that contains an array of Strings.
+- `msg.`: A variable on the msg object that contains an array of Strings.
+- `flow.`: A variable on the flow context object that contains an array of Strings.
+- `global.`: A variable on the global context object that contains an array of Strings.
 - `json`: A JSON array of Strings.
 - `string`: A singular path String.
 
 The destination path may be defined in one of a number of ways.
-- `msg.`: A path to a variable on the msg object that contains a local path String.
-- `flow.`: A path to a variable on the flow context object that contains a local path String
-- `global.`: A path to a variable on the global context object that contains a local path String
+- `msg.`: A variable on the msg object that contains a local path String.
+- `flow.`: A variable on the flow context object that contains a local path String
+- `global.`: A variable on the global context object that contains a local path String
 - `string`: A singular local path String.
 
 As an output an Array of local file path Strings is places in `msg.payload`
