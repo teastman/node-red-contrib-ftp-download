@@ -16,34 +16,34 @@
 
 <script type="text/x-red" data-template-name="ftp-download-server">
   <div class="form-row">
-    <label for="node-config-input-host"><i class="fa fa-server"></i><span data-i18n="server.host"></span></label>
+    <label for="node-config-input-host"><i class="fa fa-server"></i> <span data-i18n="server.host"></span></label>
     <input type="text" id="node-config-input-host" placeholder="localhost" style="width: 40%;" />
     <label for="node-config-input-port" style="margin-left: 10px; width: 35px; "><span data-i18n="server.port"></span></label>
     <input type="text" id="node-config-input-port" placeholder="21" style="width:45px">
   </div>
   <div class="form-row">
-    <label for="node-config-input-user"><i class="fa fa-user"></i><span data-i18n="common.label.username"></span></label>
+    <label for="node-config-input-user"><i class="fa fa-user"></i> <span data-i18n="server.username"></span></label>
     <input type="text" id="node-config-input-user" placeholder="anonymous" />
   </div>
   <div class="form-row">
-    <label for="node-config-input-password"><i class="fa fa-lock"></i><span data-i18n="common.label.password"></span></label>
+    <label for="node-config-input-password"><i class="fa fa-lock"></i> <span data-i18n="server.password"></span></label>
     <input type="password" id="node-config-input-password">
   </div>
   <div class="form-row">
-    <label for="node-config-input-connTimeout"><i class="fa fa-clock-o"></i><span data-i18n="server.connection_timeout"></span></label>
+    <label for="node-config-input-connTimeout"><i class="fa fa-clock-o"></i> <span data-i18n="server.connection_timeout"></span></label>
     <input type="text" id="node-config-input-connTimeout" placeholder="10000">
   </div>
   <div class="form-row">
-    <label for="node-config-input-pasvTimeout"><i class="fa fa-clock-o"></i><span data-i18n="server.pasv_timeout"></span></label>
+    <label for="node-config-input-pasvTimeout"><i class="fa fa-clock-o"></i> <span data-i18n="server.pasv_timeout"></span></label>
     <input type="text" id="node-config-input-pasvTimeout" placeholder="10000">
   </div>
   <div class="form-row">
-    <label for="node-config-input-keepalive"><i class="fa fa-clock-o"></i><span data-i18n="server.keepalive"></span></label>
+    <label for="node-config-input-keepalive"><i class="fa fa-clock-o"></i> <span data-i18n="server.keepalive"></span></label>
     <input type="text" id="node-config-input-keepalive" placeholder="10000">
   </div>
   <div class="form-row">
-    <label for="node-config-input-name"><i class="fa fa-tag"></i><span data-i18n="common.label.name"></span></label>
-    <input type="text" id="node-input-name" data-i18n="[placeholder]common.label.name">
+    <label for="node-config-input-name"><i class="fa fa-tag"></i> <span data-i18n="server.name"></span></label>
+    <input type="text" id="node-input-name">
   </div>
 </script>
 
@@ -70,20 +70,20 @@
 
 <script type="text/x-red" data-template-name="ftp-download">
   <div class="form-row">
-    <label for="node-input-server"><i class="fa fa-server"></i><span data-i18n="download.server"></span></label>
+    <label for="node-input-server"><i class="fa fa-server"></i> <span data-i18n="download.server"></span></label>
     <input type="text" id="node-input-server">
   </div>
   <div class="form-row">
-    <label for="node-input-files"><i class="fa fa-file"></i><span data-i18n="download.files"></span></label>
+    <label for="node-input-files"><i class="fa fa-file"></i> <span data-i18n="download.files"></span></label>
     <input type="text" id="node-input-files" placeholder="Filenames">
   </div>
   <div class="form-row">
-    <label for="node-input-destination"><i class="fa fa-folder"></i><span data-i18n="download.destination"></span></label>
+    <label for="node-input-destination"><i class="fa fa-folder"></i> <span data-i18n="download.destination"></span></label>
     <input type="text" id="node-input-destination" placeholder="Local Folder">
   </div>
   <div class="form-row">
-    <label for="node-input-name"><i class="fa fa-tag"></i><span data-i18n="common.label.name"></span></label>
-    <input type="text" id="node-input-name" data-i18n="[placeholder]common.label.name">
+    <label for="node-input-name"><i class="fa fa-tag"></i> <span data-i18n="download.name"></span></label>
+    <input type="text" id="node-input-name">
   </div>
 </script>
 

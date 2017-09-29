@@ -2,13 +2,17 @@
   "server": {
     "host": "Host",
     "port": "Port",
+    "username": "Username",
+    "password": "Password",
     "connection_timeout": "Connection Timeout",
     "pasv_timeout": "PASV Timeout",
-    "keepalive": "Keepalive"
+    "keepalive": "Keepalive",
+    "name": "Name"
   },
   "download": {
     "server": "Server",
     "files": "File(s)",
-    "destination": "Destination"
+    "destination": "Destination",
+    "name": "Name"
   }
 }
