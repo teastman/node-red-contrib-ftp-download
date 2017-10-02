@@ -54,6 +54,7 @@ module.exports = function (RED) {
         node.directory = n.directory;
         node.filesType = n.filesType || "str";
         node.directoryType = n.directoryType || "str";
+        node.output = n.output;
 
         let fileList = [];
         let directory = "";
@@ -119,7 +120,7 @@ module.exports = function (RED) {
 
                 promise
                     .then((filePaths)=> {
-                        msg.payload = filePaths;
+                        msg[node.output] = filePaths;
                         node.send(msg);
                     })
                     .catch((err) => {

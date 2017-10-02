@@ -82,6 +82,10 @@
     <input type="text" id="node-input-directory" placeholder="Local Folder">
   </div>
   <div class="form-row">
+    <label for="node-input-output"><i class="fa fa-sign-out"></i> <span data-i18n="download.output"></span></label>
+    <input type="text" id="node-input-output" placeholder="payload">
+  </div>
+  <div class="form-row">
     <label for="node-input-name"><i class="fa fa-tag"></i> <span data-i18n="download.name"></span></label>
     <input type="text" id="node-input-name">
   </div>
@@ -141,7 +145,8 @@
     objects with dest fields set.  The final destination will be `directory + "/" + file.dest`</p>
 
     <h3>Outputs</h3>
-    <p>Sets <code>msg.payload</code> to be an Array of local path strings where the downloaded files were stored.</p>
+    <p>The node outputs an Array of local path Strings which indicate where the files were downloaded to.</p>
+    <p>The "Output" variable may be set to define where the output Array of file names will be put.  By default <code>msg.payload</code> is used.</p>
 
     <h3>References</h3>
     <ul>
@@ -154,9 +159,10 @@
         category: 'storage-input',
         defaults: {
             server: {type: 'ftp-download-server', required: true},
-            files: {value: ''},
+            files: {value: '', required: true},
             directory: {value: ''},
             name: {value: ''},
+            output: {value: 'payload', required: true},
             filesType: { value:"str" },
             directoryType: { value:"str" }
         },
@@ -170,6 +176,7 @@
         oneditprepare: function () {
             $("#node-input-files").typedInput({default:this.filesType||'str',types: ["str", "json", "msg", "flow", "global"]});
             $("#node-input-directory").typedInput({default:this.directoryType||'str',types: ["str", "msg", "flow", "global"]});
+            $("#node-input-output").typedInput({types: ["msg"]});
         },
         oneditsave: function() {
             this.filesType = $("#node-input-files").typedInput('type');

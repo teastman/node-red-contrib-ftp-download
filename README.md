@@ -53,7 +53,8 @@ objects with dest fields set.  The final destination will be `directory + "/" + 
 
 **Output**
 
-An Array of local file path Strings is placed in `msg.payload`
+An Array of local file path Strings.  The "Output" variable may be set to define where
+the Array will be placed, by default `msg.payload` is used.
 
 Acknowledgements
 ----------------
