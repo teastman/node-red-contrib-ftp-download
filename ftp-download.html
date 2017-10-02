@@ -78,8 +78,8 @@
     <input type="text" id="node-input-files" placeholder="Filenames">
   </div>
   <div class="form-row">
-    <label for="node-input-destination"><i class="fa fa-folder"></i> <span data-i18n="download.destination"></span></label>
-    <input type="text" id="node-input-destination" placeholder="Local Folder">
+    <label for="node-input-directory"><i class="fa fa-folder"></i> <span data-i18n="download.directory"></span></label>
+    <input type="text" id="node-input-directory" placeholder="Local Folder">
   </div>
   <div class="form-row">
     <label for="node-input-name"><i class="fa fa-tag"></i> <span data-i18n="download.name"></span></label>
@@ -91,25 +91,41 @@
     <p>Downloads files from an FTP server to a local directory.</p>
     <h3>Details</h3>
     <p>This node will connect to the specified 'server' and attempt to download all file paths defined in the 'File(s)'
-    field and place them in the 'Destination' directory.  This occurs within a single connection, so if any of the files
+    field and place them in the 'directory' directory.  This occurs within a single connection, so if any of the files
     fail, an error will be thrown and the rest will fail.</p>
 
     <h3>Inputs</h3>
     <p>The 'File(s)' input may be defined from the following sources.</p>
     <dl class="message-properties">
         <dt>msg.</dt>
-        <dd>A variable on the msg, must be an Array of path Strings.</dd>
+        <dd>A variable on the msg, must be an Array of path Strings or source Objects.</dd>
         <dt>flow.</dt>
-        <dd>A variable in the flow context, must be an Array of path Strings.</dd>
+        <dd>A variable in the flow context, must be an Array of path Strings or source Objects.</dd>
         <dt>global.</dt>
-        <dd>A variable in the global context, must be an Array of path Strings.</dd>
+        <dd>A variable in the global context, must be an Array of path Strings or source Objects.</dd>
         <dt>json</dt>
-        <dd>An Array of path strings.</dd>
+        <dd>An Array of path strings or source Objects.</dd>
         <dt>string</dt>
         <dd>A single path string.</dd>
     </dl>
 
-    <p>The 'Destination' input may be defined from the following sources.</p>
+    <code>
+    global.test = ["/path/to/ftp.file", "/path/to/another/ftp.file"];
+    </code>
+    or
+    <code>
+    global.test = [
+        {
+            "src": "/path/to/ftp.file",
+            "dest": "/path/to/local.file"
+        }, {
+            "src": "/path/to/another/ftp.file",
+            "dest": "/path/to/another/local.file"
+        }
+    ];
+    </code>
+
+    <p>The 'directory' input may be defined from the following sources.</p>
     <dl class="message-properties">
         <dt>msg.</dt>
         <dd>A variable on the msg, must be a local path.</dd>
@@ -121,14 +137,15 @@
         <dd>A single local path string.</dd>
     </dl>
 
-    <p>Reads a list of file paths from the File(s) input
+    <p>Reads a list of file paths from the File(s) input.  The files defined in the files field will be downloaded into the directory field, if the files field is an array of
+    objects with dest fields set.  The final destination will be `directory + "/" + file.dest`</p>
 
     <h3>Outputs</h3>
     <p>Sets <code>msg.payload</code> to be an Array of local path strings where the downloaded files were stored.</p>
 
     <h3>References</h3>
     <ul>
-        <li><a href="">GitHub</a> - node-red-contrib-ftp-download repository</li>
+        <li><a href="https://github.com/teastman/node-red-contrib-ftp-download">GitHub</a> - node-red-contrib-ftp-download repository</li>
     </ul>
 </script>
 
@@ -138,10 +155,10 @@
         defaults: {
             server: {type: 'ftp-download-server', required: true},
             files: {value: ''},
-            destination: {value: ''},
+            directory: {value: ''},
             name: {value: ''},
             filesType: { value:"str" },
-            destinationType: { value:"str" }
+            directoryType: { value:"str" }
         },
         inputs: 1,
         outputs: 1,
@@ -152,11 +169,11 @@
         },
         oneditprepare: function () {
             $("#node-input-files").typedInput({default:this.filesType||'str',types: ["str", "json", "msg", "flow", "global"]});
-            $("#node-input-destination").typedInput({default:this.destinationType||'str',types: ["str", "msg", "flow", "global"]});
+            $("#node-input-directory").typedInput({default:this.directoryType||'str',types: ["str", "msg", "flow", "global"]});
         },
         oneditsave: function() {
             this.filesType = $("#node-input-files").typedInput('type');
-            this.destinationType = $("#node-input-destination").typedInput('type');
+            this.directoryType = $("#node-input-directory").typedInput('type');
         }
     });
 </script>

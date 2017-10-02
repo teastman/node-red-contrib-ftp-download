@@ -51,12 +51,12 @@ module.exports = function (RED) {
         node.server = n.server;
         node.serverConfig = RED.nodes.getNode(node.server);
         node.files = n.files;
-        node.destination = n.destination;
+        node.directory = n.directory;
         node.filesType = n.filesType || "str";
-        node.destinationType = n.destinationType || "str";
+        node.directoryType = n.directoryType || "str";
 
         let fileList = [];
-        let destination = "";
+        let directory = "";
 
         node.on('input', (msg) => {
 
@@ -88,33 +88,24 @@ module.exports = function (RED) {
                 return;
             }
 
-            // Load the destination from the appropriate variable.
+            // Load the directory from the appropriate variable.
             try {
-                switch (node.destinationType) {
+                switch (node.directoryType) {
                     case 'msg':
-                        destination = msg[node.destination];
+                        directory = msg[node.directory];
                         break;
                     case 'flow':
-                        destination = flow.get(node.destination);
+                        directory = flow.get(node.directory);
                         break;
                     case 'global':
-                        destination = global.get(node.destination);
+                        directory = global.get(node.directory);
                         break;
                     default:
-                        destination = node.destination;
+                        directory = node.directory;
                 }
             }
             catch (err) {
-                node.error("Could not load destination variable, type: " + node.destinationType + " location: " + node.destination, msg);
-                return;
-            }
-
-            // Assert we have access to write to the destination
-            try {
-                fs.accessSync(destination, fs.constants.W_OK);
-            }
-            catch (err) {
-                node.error("Lacking permission to write files to " + destination, msg);
+                node.error("Could not load directory variable, type: " + node.directoryType + " location: " + node.directory, msg);
                 return;
             }
 
@@ -134,8 +125,8 @@ module.exports = function (RED) {
                     .catch((err) => {
                         msg.payload = {
                             fileList: fileList,
-                            destination: destination,
-                            error: err
+                            directory: directory,
+                            caught: err
                         };
                         node.error("FTP download failed", msg);
                     })
@@ -144,22 +135,35 @@ module.exports = function (RED) {
             function download(file) {
                 return (filePaths) => new Promise((resolve, reject) => {
                     try {
-                        conn.get(file, (err, stream) => {
+                        let source = file;
+                        if(typeof file.src === "string")
+                            source = file.src;
+
+                        let destination = path.join(directory, path.basename(source));
+                        if(typeof file.dest === "string"){
+                            destination = path.join(directory, file.dest);
+                        }
+
+                        conn.get(source, (err, stream) => {
+                            if (err)
+                                reject({"paths": filePaths, "error": err});
+
+                            filePaths.push(destination);
                             try {
-                                if (err)
-                                    throw err;
-                                let filePath = path.join(destination, path.basename(file));
-                                filePaths.push(filePath);
+                                let writestream = fs.createWriteStream(destination);
+                                writestream.on('error', (err) => {
+                                    reject({"paths": filePaths, "error": err});
+                                });
                                 stream.once('finish', () => resolve(filePaths));
-                                stream.pipe(fs.createWriteStream(filePath));
+                                stream.pipe(writestream);
                             }
                             catch (error) {
-                                reject(error);
+                                reject({"paths": filePaths, "error": error});
                             }
                         });
                     }
                     catch (error) {
-                        reject(error);
+                        reject({"paths": filePaths, "error": error});
                     }
                 });
             }

@@ -12,7 +12,7 @@
   "download": {
     "server": "Server",
     "files": "File(s)",
-    "destination": "Destination",
+    "directory": "Directory",
     "name": "Name"
   }
 }
