@@ -1,6 +1,6 @@
 {
   "name": "node-red-contrib-ftp-download",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "A Node-RED node for FTP downloading.",
   "dependencies": {
     "ftp": "0.x"

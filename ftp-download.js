@@ -169,7 +169,18 @@ module.exports = function (RED) {
                 });
             }
 
-            conn.connect(node.serverConfig.options);
+            conn.on('error', (err) => {
+                msg.payload = err;
+                node.error("An error occurred with the FTP library.", msg);
+            });
+
+            try{
+                conn.connect(node.serverConfig.options);
+            }
+            catch (err) {
+                msg.payload = err;
+                node.error("Could not connect to the FTP server.", msg);
+            }
         });
 
         node.on('close', () => {
