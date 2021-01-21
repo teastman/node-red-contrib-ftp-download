@@ -44,7 +44,6 @@ module.exports = function (RED) {
     function FtpDownloadNode(n) {
         RED.nodes.createNode(this, n);
 
-        const conn = new ftp();
         const flow = this.context().flow;
         const global = this.context().global;
         const node = this;
@@ -60,7 +59,8 @@ module.exports = function (RED) {
         let directory = "";
 
         node.on('input', (msg) => {
-
+            const conn = new ftp();
+            
             // Load the files list from the appropriate variable.
             try {
                 switch (node.filesType) {
@@ -121,6 +121,7 @@ module.exports = function (RED) {
                 promise
                     .then((filePaths)=> {
                         msg[node.output] = filePaths;
+                        conn.end();
                         node.send(msg);
                     })
                     .catch((err) => {
@@ -185,7 +186,8 @@ module.exports = function (RED) {
 
         node.on('close', () => {
             try {
-                conn.destroy();
+                // conn.destroy();
+                // Line removed since connection should be already closed
             }
             catch (err) {
                 // Do nothing as the node is closed anyway.
